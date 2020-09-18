@@ -1,0 +1,11 @@
+build/
+.gradle/
+.idea/
+*.iml
+out/
+database/latest.dump
+/src/test/data/
+.DS_Store
+/service/logs/
+/logs
+/docker/volumes/

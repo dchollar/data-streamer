@@ -1,0 +1,87 @@
+version: '3.7'
+services:
+  destination-service:
+    build: .
+    container_name: destination-service-container
+    environment:
+      - SPRING_DATASOURCE_URL= ${SPRING_DOCKER_DATASOURCE_DESTINATION_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DOCKER_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DOCKER_DATASOURCE_PASSWORD}
+      - SERVICE_SOURCE_HTTP=${SERVICE_SOURCE_HTTP}
+      - SERVICE_SOURCE_HOST=${SERVICE_DOCKER_SOURCE_HOST}
+      - SERVICE_SOURCE_PORT=${SERVER_NGINX_SOURCE_PORT}
+      - SERVICE_TYPE=${SERVICE_TYPE_DESTINATION}
+      - JAVA_OPTS=${JAVA_OPTS}
+    depends_on:
+      - pg-destination
+    ports:
+      - 8080:8080
+    networks:
+      - destination-network
+  source-service:
+    build: .
+    container_name: source-service-container
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DOCKER_DATASOURCE_SOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DOCKER_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DOCKER_DATASOURCE_PASSWORD}
+      - SERVICE_TYPE=${SERVICE_TYPE_SOURCE}
+      - SERVER_PORT=8081
+      - JAVA_OPTS=${JAVA_OPTS}
+    networks:
+      - source-network
+    depends_on:
+      - pg-source
+    ports:
+      - 8081:8081
+  nginx:
+    build: docker/nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - source-network
+    volumes:
+      - ./docker/nginx:/etc/nginx/conf
+    depends_on:
+      - source-service
+  pg-destination:
+    restart: always
+    container_name: pg-destination
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=destination
+    ports:
+      - "5105:5432"
+    volumes:
+      - ./docker/postgres/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql
+      - ./docker/volumes/destination-postgres:/var/lib/postgresql/data:delegated
+    networks:
+      - destination-network
+  pg-source:
+    restart: always
+    container_name: pg-source
+    image: postgres
+    shm_size: 1gb
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=source
+    ports:
+      - "5205:5432"
+    volumes:
+      - ./docker/postgres/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql
+      - ./docker/volumes/source-postgres:/var/lib/postgresql/data:delegated
+    networks:
+      - source-network
+networks:
+  source-network:
+    name: source-network
+  destination-network:
+    name: destination-network
+volumes:
+ source:

@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: extractor
+  datasource:
+    url: jdbc:postgresql://localhost:5432/source
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-test-query: select 1
+      maximum-pool-size: 65
+      connection-init-sql: select 1
+    tomcat:
+      jmx-enabled: false
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  groovy:
+    template:
+      check-template-location: false
+server:
+  compression:
+    enabled: true
+  port: 8080
+  servlet:
+    context-path: /extractor
+    session:
+      timeout: 60m
+  netty:
+    connection-timeout: 600s
+  tomcat:
+    connection-timeout: 600s
+logging:
+  file:
+    name: ./logs/extractor.log
+    max-size: 50MB
+service:
+  source:
+    http: https
+    host: localhost
+    port: 8081
+  type: DESTINATION
+  threads: 20
+  table-threads: 15
+  use-httpclient: false
+  version: 2.22
