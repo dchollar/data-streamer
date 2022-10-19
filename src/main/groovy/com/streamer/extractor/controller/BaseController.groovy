@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.web.bind.annotation.RestController
 
-import javax.security.sasl.AuthenticationException
 import javax.xml.bind.ValidationException
 
 @Slf4j

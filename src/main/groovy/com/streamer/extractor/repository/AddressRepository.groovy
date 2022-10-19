@@ -1,7 +1,6 @@
 package com.streamer.extractor.repository
 
 import com.streamer.extractor.entity.Address
-import com.streamer.extractor.entity.Customer
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.QueryHints

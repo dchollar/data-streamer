@@ -4,18 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.EqualsAndHashCode
 import org.springframework.data.domain.Persistable
 
-import javax.persistence.Basic
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
-import javax.persistence.Transient
+import javax.persistence.*
 import java.sql.Timestamp
 
 @EqualsAndHashCode(includes = ['id'])
 @Entity
 @Table(name = 'address', schema = 'public')
-class Address  implements Serializable, Persistable<Integer>  {
+class Address implements Serializable, Persistable<Integer> {
 
     @Id
     @Column(name = 'id', nullable = false)

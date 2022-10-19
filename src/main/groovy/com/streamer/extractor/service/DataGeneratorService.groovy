@@ -1,11 +1,11 @@
 package com.streamer.extractor.service
 
-import com.github.javafaker.Faker
 import com.streamer.extractor.entity.Address
 import com.streamer.extractor.entity.Customer
 import com.streamer.extractor.repository.AddressRepository
 import com.streamer.extractor.repository.CustomerRepository
 import groovy.util.logging.Slf4j
+import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
